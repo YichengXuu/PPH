@@ -1,0 +1,151 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:lc="using:PPH.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="PPH.Views.DetailView"
+             DataContext="{Binding DetailViewModel, Source={StaticResource ServiceLocator}}"
+             >
+       <UserControl.Resources>
+              <lc:NegativeConverter x:Key="NegativeConverter"></lc:NegativeConverter>
+       </UserControl.Resources>
+       <i:Interaction.Behaviors>
+              <ia:EventTriggerBehavior EventName="Loaded">
+                     <ia:InvokeCommandAction Command="{Binding OnLoadedCommand}"></ia:InvokeCommandAction>
+              </ia:EventTriggerBehavior>
+       </i:Interaction.Behaviors>
+   
+       <ScrollViewer>
+        <StackPanel Margin="8">
+            <!-- 单词显示 -->
+            <Label FontSize="30"
+                   Margin="0,0,0,8"
+                   HorizontalAlignment="Center"
+                   Content="{Binding CurrentWord.Word}" />
+            
+            <!-- 音标 -->
+            <Label FontSize="20"
+                   Margin="0,0,0,8"
+                   HorizontalAlignment="Center"
+                   Content="{Binding CurrentWord.Accent}" />
+
+            <!-- 中文释义 -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,8">
+                <Label FontSize="20" 
+                       VerticalAlignment="Center"
+                       Content="中文释义：" />
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="{Binding CurrentWord.CnMeaning}" />
+            </StackPanel>
+
+            <!-- 英文释义 -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,8">
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="英文释义：" />
+                <TextBlock FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding CurrentWord.EnMeaning}"
+                           Width="600"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- 例句 -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,8">
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="例句：" />
+                <TextBlock FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding CurrentWord.Sentence}"
+                           Width="600"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- 例句翻译 -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,8">
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="例句翻译：" />
+                <TextBlock FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding CurrentWord.SentenceTrans}"
+                           Width="500"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- 词根 -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,8"
+                        IsVisible="{Binding CanShowEtyma}">
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="词根：" />
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="{Binding CurrentWord.Etyma}" />
+            </StackPanel>
+
+            <!-- 相关词组 -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,8"
+                        IsVisible="{Binding CanShowPhrase}">
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="相关词组搭配：" />
+                <Label FontSize="20"
+                       VerticalAlignment="Center"
+                       Content="{Binding CurrentWord.Phrase}" />
+            </StackPanel>
+
+            <!-- 加载进度 -->
+            <StackPanel Margin="0,0,0,8"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        IsVisible="{Binding IsLoading}">
+                <ProgressBar Width="30"
+                             Height="30"
+                             IsIndeterminate="True"
+                             Theme="{DynamicResource ProgressRing}"
+                             ShowProgressText="False" />
+                <TextBlock Text="正在载入"
+                           FontSize="20"
+                           VerticalAlignment="Center"
+                           Margin="8,0,0,0" />
+            </StackPanel>
+
+            <!-- 收藏切换 -->
+            <StackPanel Margin="0,5,0,12"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource NegativeConverter}}">
+                <ToggleSwitch OnContent="已收藏"
+                              OffContent="未收藏"
+                              IsChecked="{Binding Favorite.IsFavorite}"
+                              Command="{Binding FavoriteSwitchCommand}" />
+            </StackPanel>
+
+            <!-- 查找按钮 -->
+            <Button HorizontalAlignment="Center"
+                    Content="在本地数据库中查找"
+                    Command="{Binding QueryCommand}"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
